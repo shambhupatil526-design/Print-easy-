@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Print Easy</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="header">
+    <h1>🖨️ Print Easy</h1>
+    <p>Fast & Easy Printing</p>
+  </div>
+
+  <div class="card">
+
+    <label class="section-title">Select Document</label>
+
+    <label class="upload-box">
+      <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png">
+      <span>📄</span>
+      <b>Choose PDF / Photo</b>
+      <small>PDF, JPG, JPEG or PNG</small>
+    </label>
+
+    <div id="fileName" class="file-name"></div>
+
+    <label class="section-title">Customer Details</label>
+
+    <input type="text" id="customerName" class="customer-input" placeholder="Customer Name">
+
+    <input type="tel" id="mobileNumber" class="customer-input"
+      placeholder="Mobile Number" maxlength="10">
+
+    <label class="section-title">Number of Copies</label>
+
+    <div class="copies-control">
+      <button onclick="changeCopies(-1)">−</button>
+      <span id="copies">1</span>
+      <button onclick="changeCopies(1)">+</button>
+    </div>
+
+    <label class="section-title">Print Type</label>
+
+    <div class="type-card">
+
+      <label>
+        <input type="radio" name="printType" value="bw" checked>
+        <div>
+          <strong>⚫ B&W Print</strong>
+          <small>Black & White</small>
+        </div>
+      </label>
+
+      <div class="side-options">
+
+        <label>
+          <input type="radio" name="side" value="single" checked>
+          Single Side
+          <b>₹3</b>
+        </label>
+
+        <label>
+          <input type="radio" name="side" value="double">
+          Double Side
+          <b>₹5</b>
+        </label>
+
+      </div>
+
+    </div>
+
+    <div class="type-card">
+
+      <label>
+        <input type="radio" name="printType" value="color">
+        <div>
+          <strong>🌈 Color Print</strong>
+          <small>Color Printing</small>
+        </div>
+      </label>
+
+      <div class="side-options">
+
+        <label>
+          <input type="radio" name="colorSide" value="single" checked>
+          Single Side
+          <b>₹5</b>
+        </label>
+
+        <label>
+          <input type="radio" name="colorSide" value="double">
+          Double Side
+          <b>₹10</b>
+        </label>
+
+      </div>
+
+    </div>
+
+    <div class="amount-box">
+      <span>Total Amount</span>
+      <strong>₹<span id="amount">3</span></strong>
+    </div>
+
+    <button class="pay-button" onclick="createOrder()">
+      Continue to Payment →
+    </button>
+
+  </div>
+
+  <div id="orderBox" class="order-box"></div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
