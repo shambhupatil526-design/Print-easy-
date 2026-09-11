@@ -1,5 +1,7 @@
 let copies = 1;
 
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3xq8_U_on5PosBmN8vPjBgO3p6869l-FHHya2akWlPXBWlDI-iB9fp80WLne5kX3D/exec";
+
 const fileInput = document.getElementById("fileInput");
 const fileName = document.getElementById("fileName");
 const copiesDisplay = document.getElementById("copies");
@@ -36,23 +38,38 @@ function calculateAmount() {
   amountDisplay.textContent = copies * price;
 }
 
+
+/* FILE SELECT */
 fileInput.addEventListener("change", function () {
+
   if (this.files.length > 0) {
     fileName.textContent = "Selected: " + this.files[0].name;
   }
+
 });
 
+
+/* PRINT TYPE */
 document.querySelectorAll('input[name="printType"]').forEach(function (radio) {
+
   radio.addEventListener("change", calculateAmount);
+
 });
 
+
+/* SINGLE / DOUBLE SIDE */
 document
   .querySelectorAll('input[name="side"], input[name="colorSide"]')
   .forEach(function (radio) {
+
     radio.addEventListener("change", calculateAmount);
+
   });
 
+
+/* CREATE ORDER */
 function createOrder() {
+
   const file = fileInput.files[0];
 
   const customerName =
@@ -61,72 +78,111 @@ function createOrder() {
   const mobileNumber =
     document.getElementById("mobileNumber").value.trim();
 
+
   if (!file) {
+
     alert("Please select a PDF or Photo first.");
     return;
+
   }
+
 
   if (!customerName) {
+
     alert("Please enter Customer Name.");
     return;
+
   }
 
+
   if (!/^[0-9]{10}$/.test(mobileNumber)) {
+
     alert("Please enter a valid 10-digit Mobile Number.");
     return;
+
   }
+
 
   const printType =
     document.querySelector('input[name="printType"]:checked').value;
 
+
   let price;
   let typeName;
 
+
   if (printType === "bw") {
+
     const side =
       document.querySelector('input[name="side"]:checked').value;
 
+
     if (side === "single") {
+
       price = 3;
       typeName = "B&W Single Side";
+
     } else {
+
       price = 5;
       typeName = "B&W Double Side";
+
     }
+
   } else {
+
     const side =
       document.querySelector('input[name="colorSide"]:checked').value;
 
+
     if (side === "single") {
+
       price = 5;
       typeName = "Color Single Side";
+
     } else {
+
       price = 10;
       typeName = "Color Double Side";
+
     }
+
   }
 
+
   const total = copies * price;
+
 
   const orderId =
     "PR" + Date.now().toString().slice(-6);
 
+
   document.getElementById("orderBox").innerHTML = `
+
     <div class="order-success">
 
       <h2>🧾 Order Summary</h2>
 
       <p><b>Order ID:</b> ${orderId}</p>
+
       <p><b>Customer:</b> ${customerName}</p>
+
       <p><b>Mobile:</b> ${mobileNumber}</p>
+
       <p><b>File:</b> ${file.name}</p>
+
       <p><b>Copies:</b> ${copies}</p>
+
       <p><b>Print:</b> ${typeName}</p>
+
       <p><b>Rate:</b> ₹${price}</p>
 
       <div class="amount-box">
+
         <span>Total Amount</span>
+
         <strong>₹${total}</strong>
+
       </div>
 
       <button class="pay-button"
@@ -137,11 +193,17 @@ function createOrder() {
       </button>
 
     </div>
+
   `;
+
 }
 
+
+/* PAYMENT SCREEN */
 function showPayment(total, orderId) {
+
   document.getElementById("orderBox").innerHTML = `
+
     <div class="order-success">
 
       <h2>💳 Payment</h2>
@@ -149,11 +211,15 @@ function showPayment(total, orderId) {
       <p><b>Order ID:</b> ${orderId}</p>
 
       <div class="amount-box">
+
         <span>Total Payable</span>
+
         <strong>₹${total}</strong>
+
       </div>
 
       <p>Select Payment Method</p>
+
 
       <button class="pay-button"
         onclick="startUPIPayment(${total}, '${orderId}')">
@@ -161,6 +227,7 @@ function showPayment(total, orderId) {
         📱 Pay with UPI
 
       </button>
+
 
       <button class="pay-button"
         onclick="paymentDone('${orderId}')">
@@ -170,21 +237,21 @@ function showPayment(total, orderId) {
       </button>
 
     </div>
+
   `;
+
 }
 
-function startUPIPayment(total, orderId) {
 
-  /*
-    TEST UPI ID.
-    पुढे इथे तुझी स्वतःची UPI ID टाकू.
-  */
+/* UPI PAYMENT */
+function startUPIPayment(total, orderId) {
 
   const upiId = "7498323617@ybl";
 
   const name = "Print Easy";
 
   const note = "Print Order " + orderId;
+
 
   const upiLink =
     "upi://pay" +
@@ -194,21 +261,167 @@ function startUPIPayment(total, orderId) {
     "&cu=INR" +
     "&tn=" + encodeURIComponent(note);
 
+
   window.location.href = upiLink;
+
 }
 
-  function paymentDone(orderId) {
+
+/* SEND FILE + ORDER TO GOOGLE DRIVE */
+function sendOrderToDrive(paymentMethod, orderId) {
+
+  const file = fileInput.files[0];
+
+  if (!file) {
+
+    alert("File not found.");
+    return;
+
+  }
+
+
+  const customerName =
+    document.getElementById("customerName").value.trim();
+
+  const mobileNumber =
+    document.getElementById("mobileNumber").value.trim();
+
+
+  const printType =
+    document.querySelector('input[name="printType"]:checked').value;
+
+
+  let price;
+  let typeName;
+
+
+  if (printType === "bw") {
+
+    const side =
+      document.querySelector('input[name="side"]:checked').value;
+
+
+    if (side === "single") {
+
+      price = 3;
+      typeName = "B&W Single Side";
+
+    } else {
+
+      price = 5;
+      typeName = "B&W Double Side";
+
+    }
+
+  } else {
+
+    const side =
+      document.querySelector('input[name="colorSide"]:checked').value;
+
+
+    if (side === "single") {
+
+      price = 5;
+      typeName = "Color Single Side";
+
+    } else {
+
+      price = 10;
+      typeName = "Color Double Side";
+
+    }
+
+  }
+
+
+  const total = copies * price;
+
+
+  const reader = new FileReader();
+
+
+  reader.onload = function () {
+
+    const base64Data =
+      reader.result.split(",")[1];
+
+
+    const data = {
+
+      orderId: orderId,
+
+      customerName: customerName,
+
+      mobile: mobileNumber,
+
+      fileName: file.name,
+
+      fileType: file.type,
+
+      fileData: base64Data,
+
+      copies: copies,
+
+      printType: typeName,
+
+      rate: price,
+
+      total: total,
+
+      payment: paymentMethod
+
+    };
+
+
+    fetch(APPS_SCRIPT_URL, {
+
+      method: "POST",
+
+      body: JSON.stringify(data)
+
+    })
+
+    .then(function (response) {
+
+      return response.json();
+
+    })
+
+    .then(function (result) {
+
+      console.log("Server Response:", result);
+
+    })
+
+    .catch(function (error) {
+
+      console.error("Upload Error:", error);
+
+    });
+
+  };
+
+
+  reader.readAsDataURL(file);
+
+}
+
+
+/* PAY AT SHOP */
+function paymentDone(orderId) {
 
   sendOrderToDrive("Pay at Shop", orderId);
 
+
   document.getElementById("orderBox").innerHTML = `
+
     <div class="order-success">
 
       <h2>✅ Order Confirmed</h2>
 
       <p><b>Order ID:</b> ${orderId}</p>
 
-      <p>Payment successful.</p>
+      <p>Payment method: Pay at Shop</p>
 
       <p>Your print order has been received.</p>
 
@@ -222,5 +435,7 @@ function startUPIPayment(total, orderId) {
       </button>
 
     </div>
+
   `;
-  }
+
+}
