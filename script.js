@@ -197,7 +197,6 @@ function startUPIPayment(total, orderId) {
   window.location.href = upiLink;
 }
 
-function paymentDone(orderId) {
   function paymentDone(orderId) {
 
   sendOrderToDrive("Pay at Shop", orderId);
