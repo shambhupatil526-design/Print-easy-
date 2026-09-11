@@ -180,7 +180,7 @@ function startUPIPayment(total, orderId) {
     पुढे इथे तुझी स्वतःची UPI ID टाकू.
   */
 
-  const upiId = "test@upi";
+  const upiId = "7498323617@ybl";
 
   const name = "Print Easy";
 
