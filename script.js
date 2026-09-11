@@ -199,6 +199,8 @@ function startUPIPayment(total, orderId) {
 
 function paymentDone(orderId) {
 
+  sendOrderToDrive("Pay at Shop", orderId);
+
   document.getElementById("orderBox").innerHTML = `
     <div class="order-success">
 
@@ -210,6 +212,8 @@ function paymentDone(orderId) {
 
       <p>Your print order has been received.</p>
 
+      <p>📁 File is being sent to shop.</p>
+
       <button class="pay-button"
         onclick="location.reload()">
 
@@ -219,6 +223,4 @@ function paymentDone(orderId) {
 
     </div>
   `;
-}
-
-calculateAmount();
+  }
