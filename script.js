@@ -198,6 +198,7 @@ function startUPIPayment(total, orderId) {
 }
 
 function paymentDone(orderId) {
+  function paymentDone(orderId) {
 
   sendOrderToDrive("Pay at Shop", orderId);
 
